@@ -1,0 +1,6 @@
+name: Frog
+main: mrholler\frog\Frog
+version: "0.1"
+api: 4.0.0
+author: "MrHoller"
+description: "Frog"
