@@ -13,7 +13,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\entity\Entity;
 use pocketmine\permission\Permission;
 use pocketmine\player\Player;
-use pocketmine\network\mcpe\protocol\ToastRequestPacket;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\Listener;
 
