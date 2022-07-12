@@ -104,8 +104,8 @@ class FrogEntity extends Living{
 
 	protected function onDeath() : void {
 		parent::onDeath();
-		FrogForm::setOption($this->getPlayer(), "isSpawned", false);
-		Frog::sendToast($this->getPlayer(), "Frog", "Your frog is dead");
+		FrogUtils::setOption($this->getPlayer(), "isSpawned", false);
+		FrogUtils::sendToast($this->getPlayer(), "Frog", "Your frog is dead");
 		$this->flagForDespawn();
 	}
 	
@@ -114,9 +114,9 @@ class FrogEntity extends Living{
 	}
 	
 	public function updateFrog() : void {
-	  $this->nametag = FrogForm::getOptions($this->getPlayer())["nametag"];
-		$this->isAttacking = (bool) FrogForm::getOptions($this->getPlayer())["isAttack"];
-		$this->lvl = (int) FrogForm::getOptions($this->getPlayer())["lvl"];
+	  $this->nametag = FrogUtils::getOptions($this->getPlayer())["nametag"];
+		$this->isAttacking = (bool) FrogUtils::getOptions($this->getPlayer())["isAttack"];
+		$this->lvl = (int) FrogUtils::getOptions($this->getPlayer())["lvl"];
 	  $this->setNameTag($this->nametag." L. ".$this->lvl);
 	}
 

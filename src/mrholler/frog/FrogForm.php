@@ -20,22 +20,22 @@ class FrogForm {
     // TODO : RENAME FROG
     // TODO : UP LVL FROG
     $form->addButtonEasy("Setting");
-    if(self::getOptions($player)["isSpawned"] and self::findFrog($player) instanceof FrogEntity){
+    if(FrogUtils::getOptions($player)["isSpawned"] and FrogUtils::findFrog($player) instanceof FrogEntity){
       $form->addButtonEasy("Despawn");
     } else {
       $form->addButtonEasy("Spawn");
     }
     $form->setCallable(function(Player $player, $data) : void {
       if($data == "Despawn"){
-        $entity = self::findFrog($player);
+        $entity = FrogUtils::findFrog($player);
         if($entity instanceof FrogEntity){
           $entity->flagForDespawn();
           Frog::sendToast($player, "Frog", "Despawned");
-          self::setOption($player, "isSpawned", false);
+          FrogUtils::setOption($player, "isSpawned", false);
         }
       }
       if($data == "Spawn"){
-        $options = self::getOptions($player);
+        $options = FrogUtils::getOptions($player);
         $location = $player->getLocation();
 	      $nbt = CompoundTag::create()
           ->setTag("Pos", new ListTag([
@@ -57,7 +57,7 @@ class FrogForm {
         $frog->updateFrog();
         $frog->spawnToAll();
         Frog::sendToast($player, "Frog", "Spawned");
-        self::setOption($player, "isSpawned", true);
+        FrogUtils::setOption($player, "isSpawned", true);
         return;
       }
       if($data == "Setting"){
@@ -69,53 +69,26 @@ class FrogForm {
   
   public static function openSetting(Player $player) : void {
     $form = new CustomForm("Setting frog");
-    //$form->addInput(self::getOptions($player)["nametag"], "Name frog", self::getOptions($player)["nametag"]);
-    $form->addToggle("Attack", self::getOptions($player)["isAttack"]);
+    //$form->addInput(FrogUtils::getOptions($player)["nametag"], "Name frog", FrogUtils::getOptions($player)["nametag"]);
+    $form->addToggle("Attack", FrogUtils::getOptions($player)["isAttack"]);
     $form->setCallable(function(Player $player, $data) : void {
       /*
       TODO :(
       if(isset($data[0])){
         if(!empty($data[0]) and strlen($data[1]) >= 3){
-          self::setOption($player, "nametag", $data[0]);
+          FrogUtils::setOption($player, "nametag", $data[0]);
         }
       }*/
       if(isset($data[0])){ // 1
-        self::setOption($player, "isAttack", $data[0]); // 1
+        FrogUtils::setOption($player, "isAttack", $data[0]); // 1
       }
-      $entity = self::findFrog($player);
+      $entity = FrogUtils::findFrog($player);
       if($entity instanceof FrogEntity){
         $entity->updateFrog();
       }
       self::open($player);
     });
     $player->sendForm($form);
-  }
-  
-  public static function getOptions(Player $player) : array {
-    $default = ["nametag" => "Frog", "lvl" => 0, "isAttack" => false, "isSpawned" => false];
-    if(!Frog::$config->get($player->getName(), false)){
-      Frog::$config->set($player->getName(), $default);
-      Frog::$config->save();
-      Frog::$config->reload();
-    }
-    return Frog::$config->get($player->getName());
-  }
-  
-  public static function setOption(Player $player, string $name, mixed $value) : void {
-    Frog::$config->setNested($player->getName().".".$name, $value);
-    Frog::$config->save();
-    Frog::$config->reload();
-  }
-  
-  public static function findFrog(Player $player) : ?FrogEntity {
-    foreach($player->getWorld()->getEntities() as $entity){
-      if($entity instanceof FrogEntity){
-        if($entity->getPlayer()->getName() == $player->getName()){
-          return $entity;
-        }
-      }
-    }
-    return null;
   }
   
 }

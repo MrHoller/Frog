@@ -32,16 +32,11 @@ class Frog extends PluginBase implements Listener {
     Server::getInstance()->getPluginManager()->registerEvents($this, $this);
   }
   
-  public static function sendToast(Player $player, string $title, string $message) : void {
-    $pk = ToastRequestPacket::create($title, $message);
-    $player->getNetworkSession()->sendDataPacket($pk);
-  }
-  
   public function onQuit(PlayerQuitEvent $event) : void {
     $player = $event->getPlayer();
-    $opts = FrogForm::getOptions($player);
+    $opts = FrogUtils::getOptions($player);
     if($opts["isSpawned"]){
-      FrogForm::setOption($player, "isSpawned", false);
+      FrogUtils::setOption($player, "isSpawned", false);
     }
   }
 
